@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  challengeaccepted:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - '4443:443'
+      - '8080:80'
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - 'postgres'
+
+  postgres:
+    ports:
+      - '5432:5432'
+    container_name: challengeaccepted-postgresql
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    volumes:
+      - 'challenge-postgresql-volume:/var/lib/postgresql/data'
+    image: 'postgres:15.0'
+    
+
+volumes:
+  challenge-postgresql-volume:
